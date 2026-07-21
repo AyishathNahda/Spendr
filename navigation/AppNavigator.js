@@ -16,6 +16,7 @@ import LoginScreen from '../screens/LoginScreen';
 import SignUpScreen from '../screens/SignUpScreen';
 import ForgotPasswordScreen from '../screens/ForgotPasswordScreen';
 import HomeScreen from '../screens/HomeScreen';
+import AddExpenseScreen from '../screens/AddExpenseScreen';
 
 import { globalStyles } from '../styles/global';
 import colors from '../constants/colors';
@@ -81,14 +82,21 @@ export default function AppNavigator() {
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         {user ? (
           // Protected Routes
-          <Stack.Screen name="Main" component={MainTabNavigator} />
+          <Stack.Group>
+            <Stack.Screen name="Main" component={MainTabNavigator} />
+            <Stack.Screen 
+              name="AddExpense" 
+              component={AddExpenseScreen} 
+              options={{ presentation: 'modal' }} 
+            />
+          </Stack.Group>
         ) : (
           // Auth Routes
-          <>
+          <Stack.Group>
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="SignUp" component={SignUpScreen} />
             <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
-          </>
+          </Stack.Group>
         )}
       </Stack.Navigator>
     </NavigationContainer>

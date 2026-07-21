@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { AuthContext } from '../context/AuthContext';
+import { ExpenseContext } from '../context/ExpenseContext';
 import BalanceCard from '../components/BalanceCard';
 import ExpenseCard from '../components/ExpenseCard';
 import colors from '../constants/colors';
@@ -9,22 +10,21 @@ import { globalStyles } from '../styles/global';
 
 const HomeScreen = ({ navigation }) => {
   const { user } = useContext(AuthContext);
+  const { expenses } = useContext(ExpenseContext);
 
-  // Placeholder data for Module 4 (will be replaced by Firebase data in Module 5/6)
-  const mockTransactions = [
-    { id: '1', type: 'expense', category: 'Food', title: 'Lunch at Cafe', amount: 15.50, date: new Date().toISOString() },
-    { id: '2', type: 'expense', category: 'Shopping', title: 'Groceries', amount: 84.20, date: new Date(Date.now() - 86400000).toISOString() },
-    { id: '3', type: 'income', category: 'Salary', title: 'Monthly Salary', amount: 3200.00, date: new Date(Date.now() - 172800000).toISOString() },
-  ];
+  // Calculate stats from real data
+  const income = expenses.filter(e => e.type === 'income').reduce((acc, curr) => acc + curr.amount, 0);
+  const expense = expenses.filter(e => e.type === 'expense').reduce((acc, curr) => acc + curr.amount, 0);
+  const balance = income - expense;
+  
+  // For savings, a simple calculation (could be customized later)
+  const savings = income > 0 ? (income - expense > 0 ? income - expense : 0) : 0;
 
-  const balance = 3090.30;
-  const income = 3200.00;
-  const expense = 109.70;
-  const savings = 500.00;
+  // Get only the 5 most recent transactions
+  const recentTransactions = expenses.slice(0, 5);
 
   const handleAddExpense = () => {
-    // Navigate to Add Expense screen (Module 5)
-    // navigation.navigate('AddExpense');
+    navigation.navigate('AddExpense');
   };
 
   return (
@@ -55,13 +55,18 @@ const HomeScreen = ({ navigation }) => {
         </View>
 
         <View style={styles.transactionsContainer}>
-          {mockTransactions.map((tx) => (
+          {recentTransactions.map((tx) => (
             <ExpenseCard 
               key={tx.id} 
               expense={tx} 
-              onPress={() => {}} 
+              onPress={() => navigation.navigate('AddExpense', { expense: tx })} 
             />
           ))}
+          {recentTransactions.length === 0 && (
+            <Text style={{ textAlign: 'center', marginTop: 20, color: colors.textMuted }}>
+              No transactions yet. Add one!
+            </Text>
+          )}
         </View>
         
         {/* Extra spacing at the bottom for scroll */}
