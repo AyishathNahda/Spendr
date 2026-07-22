@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import colors from '../constants/colors';
 
@@ -20,9 +20,30 @@ const getCategoryIcon = (category) => {
   return icons[category] || 'cash';
 };
 
-const ExpenseCard = ({ expense, onPress }) => {
+const ExpenseCard = ({ expense, onPress, index = 0 }) => {
   const isIncome = expense.type === 'income';
   const amountColor = isIncome ? colors.income : colors.text;
+
+  // Animation values
+  const opacity = useRef(new Animated.Value(0)).current;
+  const translateY = useRef(new Animated.Value(20)).current;
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(opacity, {
+        toValue: 1,
+        duration: 400,
+        delay: index * 100,
+        useNativeDriver: true,
+      }),
+      Animated.timing(translateY, {
+        toValue: 0,
+        duration: 400,
+        delay: index * 100,
+        useNativeDriver: true,
+      })
+    ]).start();
+  }, [opacity, translateY, index]);
 
   // Format date if it exists, otherwise provide a fallback
   const dateObj = expense.date ? new Date(expense.date) : new Date();
@@ -33,26 +54,28 @@ const ExpenseCard = ({ expense, onPress }) => {
   });
 
   return (
-    <TouchableOpacity style={styles.card} onPress={onPress}>
-      <View style={styles.iconContainer}>
-        <MaterialCommunityIcons 
-          name={getCategoryIcon(expense.category)} 
-          size={24} 
-          color={isIncome ? colors.income : colors.primary} 
-        />
-      </View>
-      
-      <View style={styles.detailsContainer}>
-        <Text style={styles.title}>{expense.title || expense.category}</Text>
-        <Text style={styles.date}>{dateString}</Text>
-      </View>
+    <Animated.View style={{ opacity, transform: [{ translateY }] }}>
+      <TouchableOpacity style={styles.card} onPress={onPress}>
+        <View style={styles.iconContainer}>
+          <MaterialCommunityIcons 
+            name={getCategoryIcon(expense.category)} 
+            size={24} 
+            color={isIncome ? colors.income : colors.primary} 
+          />
+        </View>
+        
+        <View style={styles.detailsContainer}>
+          <Text style={styles.title}>{expense.title || expense.category}</Text>
+          <Text style={styles.date}>{dateString}</Text>
+        </View>
 
-      <View style={styles.amountContainer}>
-        <Text style={[styles.amount, { color: amountColor }]}>
-          {isIncome ? '+' : '-'}${parseFloat(expense.amount).toFixed(2)}
-        </Text>
-      </View>
-    </TouchableOpacity>
+        <View style={styles.amountContainer}>
+          <Text style={[styles.amount, { color: amountColor }]}>
+            {isIncome ? '+' : '-'}${parseFloat(expense.amount).toFixed(2)}
+          </Text>
+        </View>
+      </TouchableOpacity>
+    </Animated.View>
   );
 };
 

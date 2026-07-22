@@ -1,12 +1,31 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { View, Text, StyleSheet, Animated } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import colors from '../constants/colors';
 import { globalStyles } from '../styles/global';
 
-const BalanceCard = ({ balance, income, expense, savings }) => {
+const BalanceCard = ({ balance = 0, income = 0, expense = 0, savings = 0 }) => {
+  const scale = useRef(new Animated.Value(0.9)).current;
+  const opacity = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(opacity, {
+        toValue: 1,
+        duration: 500,
+        useNativeDriver: true,
+      }),
+      Animated.spring(scale, {
+        toValue: 1,
+        friction: 6,
+        tension: 40,
+        useNativeDriver: true,
+      })
+    ]).start();
+  }, [opacity, scale]);
+
   return (
-    <View style={[globalStyles.card, styles.container]}>
+    <Animated.View style={[globalStyles.card, styles.container, { opacity, transform: [{ scale }] }]}>
       <Text style={styles.title}>Current Balance</Text>
       <Text style={styles.balanceText}>${balance.toFixed(2)}</Text>
 
@@ -36,7 +55,7 @@ const BalanceCard = ({ balance, income, expense, savings }) => {
         <Text style={styles.statLabel}>Savings</Text>
         <Text style={styles.statValueSavings}>${savings.toFixed(2)}</Text>
       </View>
-    </View>
+    </Animated.View>
   );
 };
 
