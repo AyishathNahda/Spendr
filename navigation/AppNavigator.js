@@ -17,6 +17,7 @@ import SignUpScreen from '../screens/SignUpScreen';
 import ForgotPasswordScreen from '../screens/ForgotPasswordScreen';
 import HomeScreen from '../screens/HomeScreen';
 import AddExpenseScreen from '../screens/AddExpenseScreen';
+import HistoryScreen from '../screens/HistoryScreen';
 
 import { globalStyles } from '../styles/global';
 import colors from '../constants/colors';
@@ -25,9 +26,6 @@ const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 // Placeholders for future modules
-const PlaceholderHistory = () => (
-  <View style={globalStyles.center}><Text>History (Module 6)</Text></View>
-);
 const PlaceholderStats = () => (
   <View style={globalStyles.center}><Text>Statistics (Module 7)</Text></View>
 );
@@ -64,7 +62,7 @@ const MainTabNavigator = () => (
     })}
   >
     <Tab.Screen name="HomeTab" component={HomeScreen} options={{ title: 'Home' }} />
-    <Tab.Screen name="History" component={PlaceholderHistory} />
+    <Tab.Screen name="History" component={HistoryScreen} />
     <Tab.Screen name="Statistics" component={PlaceholderStats} />
     <Tab.Screen name="Profile" component={PlaceholderProfile} />
   </Tab.Navigator>
