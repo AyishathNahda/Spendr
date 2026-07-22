@@ -15,7 +15,8 @@
     "react-native": "0.86.0",
     "react-native-paper": "^5.15.3",
     "react-native-safe-area-context": "^5.8.0",
-    "react-native-screens": "^4.26.2"
+    "react-native-screens": "^4.26.2",
+    "react-native-swipe-list-view": "^3.2.9"
   },
   "scripts": {
     "start": "expo start",
