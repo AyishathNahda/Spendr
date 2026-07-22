@@ -19,17 +19,13 @@ import HomeScreen from '../screens/HomeScreen';
 import AddExpenseScreen from '../screens/AddExpenseScreen';
 import HistoryScreen from '../screens/HistoryScreen';
 import StatisticsScreen from '../screens/StatisticsScreen';
+import ProfileScreen from '../screens/ProfileScreen';
 
 import { globalStyles } from '../styles/global';
 import colors from '../constants/colors';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
-
-// Placeholders for future modules
-const PlaceholderProfile = () => (
-  <View style={globalStyles.center}><Text>Profile (Module 8)</Text></View>
-);
 
 const MainTabNavigator = () => (
   <Tab.Navigator
@@ -62,7 +58,7 @@ const MainTabNavigator = () => (
     <Tab.Screen name="HomeTab" component={HomeScreen} options={{ title: 'Home' }} />
     <Tab.Screen name="History" component={HistoryScreen} />
     <Tab.Screen name="Statistics" component={StatisticsScreen} />
-    <Tab.Screen name="Profile" component={PlaceholderProfile} />
+    <Tab.Screen name="Profile" component={ProfileScreen} />
   </Tab.Navigator>
 );
 
